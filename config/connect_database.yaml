@@ -1,0 +1,8 @@
+# connect postgresSQL
+database:
+  host: "localhost"
+  port: 5432
+  user: "hiennguyen"
+  password: "Hien1201998"
+  dbname: "project_books"
+  sslmode: "disable"
