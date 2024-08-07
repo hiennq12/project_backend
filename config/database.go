@@ -9,7 +9,6 @@ import (
 func ReadConfigDb(configFile string) (*struct_model.ConfigDb, error) {
 	dataFile, err := os.ReadFile(configFile)
 	if err != nil {
-		//log.Fatal(fmt.Sprintf("Error when read file config database. Detail: [%v]"), err.Error())
 		return nil, err
 	}
 
