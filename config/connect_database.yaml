@@ -4,5 +4,5 @@ database:
   port: 5432
   user: "hiennguyen"
   password: "Hien1201998"
-  dbname: "project_books"
+  dbname: "project_old_stuff"
   sslmode: "disable"
