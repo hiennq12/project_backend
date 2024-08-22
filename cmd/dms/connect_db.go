@@ -34,6 +34,7 @@ func ConnectDbPostgreSQL() (*sql.DB, error) {
 	//defer connectPostgreSQL.Close()
 
 	log.Printf("Connect database succcess!!")
+	connectDB = connectPostgreSQL
 	return connectPostgreSQL, nil
 	//err = connectPostgreSQL.Ping()
 	//if err != nil {

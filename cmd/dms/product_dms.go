@@ -1,10 +1,13 @@
 package dms
 
 import (
+	"context"
 	"database/sql"
 	"errors"
 	"fmt"
 	"github.com/Masterminds/squirrel"
+	"github.com/hiennq12/project_backend/cmd/struct_model"
+	"github.com/hiennq12/project_backend/utils/dms-utils"
 	"log"
 )
 
@@ -59,4 +62,50 @@ func InsertDataToTestTable(req *TestRequest) (*TestResponse, error) {
 		LastInsertId: lastInsertId,
 		RowEffect:    rowEffect,
 	}, nil
+}
+
+func InsertProduct() {
+
+}
+
+type ProductsRequest struct {
+	ProductId  int64   `json:"product_id"`
+	ProductIds []int64 `json:"product_ids"`
+}
+
+type ProductsResponse struct {
+}
+
+func GetProducts(ctx context.Context, req *ProductsRequest) ([]*struct_model.Product, error) {
+	_, err := ConnectDbPostgreSQL()
+	if err != nil {
+		log.Fatal("error: ", err.Error())
+		return nil, err
+	}
+
+	query, args, err := squirrel.Select("*").From("products").
+		Where(squirrel.Eq{"id": req.ProductId}).
+		PlaceholderFormat(squirrel.Dollar).ToSql()
+	if err != nil {
+		//log.Fatal("err: ", err.Error())
+		return nil, err
+	}
+
+	rows, err := connectDB.Query(query, args...)
+	if err != nil {
+		return nil, err
+	}
+
+	products := make([]*struct_model.Product, 0)
+	for rows.Next() {
+		product := &struct_model.Product{}
+		if err = dms_utils.ScanRowToStruct(rows, product); err != nil {
+			return nil, fmt.Errorf("failed to map rows to struct: %w", err)
+		}
+
+		//if e := rows.Scan(rows, products); e != nil {
+		//	return nil, e
+		//}
+	}
+	return products, nil
 }
