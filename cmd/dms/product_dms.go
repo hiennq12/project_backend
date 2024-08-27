@@ -76,7 +76,7 @@ type ProductsRequest struct {
 type ProductsResponse struct {
 }
 
-func GetProducts(ctx context.Context, req *ProductsRequest) ([]*struct_model.Product, error) {
+func GetProducts(ctx context.Context, req *ProductsRequest) ([]struct_model.Product, error) {
 	_, err := ConnectDbPostgreSQL()
 	if err != nil {
 		log.Fatal("error: ", err.Error())
@@ -87,7 +87,6 @@ func GetProducts(ctx context.Context, req *ProductsRequest) ([]*struct_model.Pro
 		Where(squirrel.Eq{"id": req.ProductId}).
 		PlaceholderFormat(squirrel.Dollar).ToSql()
 	if err != nil {
-		//log.Fatal("err: ", err.Error())
 		return nil, err
 	}
 
@@ -96,16 +95,10 @@ func GetProducts(ctx context.Context, req *ProductsRequest) ([]*struct_model.Pro
 		return nil, err
 	}
 
-	products := make([]*struct_model.Product, 0)
-	for rows.Next() {
-		product := &struct_model.Product{}
-		if err = dms_utils.ScanRowToStruct(rows, product); err != nil {
-			return nil, fmt.Errorf("failed to map rows to struct: %w", err)
-		}
-
-		//if e := rows.Scan(rows, products); e != nil {
-		//	return nil, e
-		//}
+	products := make([]struct_model.Product, 0)
+	if err = dms_utils.ScanRowsToStruct(rows, &products); err != nil {
+		return nil, fmt.Errorf("failed to map rows to struct: %w", err)
 	}
+
 	return products, nil
 }
