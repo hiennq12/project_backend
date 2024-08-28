@@ -22,3 +22,28 @@ type Product struct {
 	UpdatedAt     time.Time `json:"updated_at"`
 	IsActive      bool      `json:"is_active"`
 }
+
+type ProductsRequest struct {
+	ProductId  int64   `json:"product_id"`
+	ProductIds []int64 `json:"product_ids"`
+}
+
+type InsertProoductsRequest struct {
+	UserID        int       `json:"user_id,omitempty"`
+	CategoryID    int       `json:"category_id,omitempty"`
+	ProductName   string    `json:"product_name,omitempty"`
+	Description   string    `json:"description,omitempty"`
+	Price         float64   `json:"price,omitempty"`
+	Condition     string    `json:"condition,omitempty"`
+	Location      string    `json:"location,omitempty"`
+	StockQuantity int       `json:"stock_quantity,omitempty"`
+	Weight        float64   `json:"weight,omitempty"`
+	Dimensions    string    `json:"dimensions,omitempty"`
+	SKU           string    `json:"sku,omitempty"`
+	Brand         string    `json:"brand,omitempty"`
+	Warranty      string    `json:"warranty,omitempty"`
+	IsNegotiable  bool      `json:"is_negotiable,omitempty"`
+	CreatedAt     time.Time `json:"created_at,omitempty"`
+	UpdatedAt     time.Time `json:"updated_at,omitempty"`
+	IsActive      bool      `json:"is_active,omitempty"`
+}

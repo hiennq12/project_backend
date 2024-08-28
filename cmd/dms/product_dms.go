@@ -64,19 +64,29 @@ func InsertDataToTestTable(req *TestRequest) (*TestResponse, error) {
 	}, nil
 }
 
-func InsertProduct() {
+func InsertProduct() (*ResponeInsert, error) {
+	_, err := ConnectDbPostgreSQL()
+	if err != nil {
+		return nil, err
+	}
 
+	//tableName := "products"
+	//queryBuilder := squirrel.Insert(tableName).Columns().Values()
+	//query, args, err := squirrel.Insert(tableName).ToSql()
+	columns := dms_utils.GetQueryColumnList(nil, struct_model.ProductsRequest{})
+	fmt.Println("=======console.log: ", columns)
+	return &ResponeInsert{}, nil
 }
 
-type ProductsRequest struct {
-	ProductId  int64   `json:"product_id"`
-	ProductIds []int64 `json:"product_ids"`
+type ResponeInsert struct {
+	LastInsertId int
+	RowEffect    int
 }
 
 type ProductsResponse struct {
 }
 
-func GetProducts(ctx context.Context, req *ProductsRequest) ([]struct_model.Product, error) {
+func GetProducts(ctx context.Context, req *struct_model.ProductsRequest) ([]struct_model.Product, error) {
 	_, err := ConnectDbPostgreSQL()
 	if err != nil {
 		log.Fatal("error: ", err.Error())
