@@ -9,6 +9,7 @@ import (
 	"github.com/hiennq12/project_backend/cmd/struct_model"
 	"github.com/hiennq12/project_backend/utils/dms-utils"
 	"log"
+	"reflect"
 )
 
 type TestRequest struct {
@@ -64,18 +65,54 @@ func InsertDataToTestTable(req *TestRequest) (*TestResponse, error) {
 	}, nil
 }
 
-func InsertProduct() (*ResponeInsert, error) {
+func InsertProducts(ctx context.Context, req []*struct_model.InsertProductsRequest) (*ResponeInsert, error) {
 	_, err := ConnectDbPostgreSQL()
 	if err != nil {
 		return nil, err
 	}
 
-	//tableName := "products"
-	//queryBuilder := squirrel.Insert(tableName).Columns().Values()
-	//query, args, err := squirrel.Insert(tableName).ToSql()
-	columns := dms_utils.GetQueryColumnList(nil, struct_model.ProductsRequest{})
-	fmt.Println("=======console.log: ", columns)
-	return &ResponeInsert{}, nil
+	tableName := "products"
+	ignoreColumns := []string{"id"}
+	columns := dms_utils.GetQueryColumnList(ignoreColumns, &struct_model.Product{})
+
+	qb := squirrel.Insert(tableName).Columns(columns).PlaceholderFormat(squirrel.Dollar)
+
+	for _, val := range req {
+		argsVal := make([]interface{}, 0)
+
+		v := reflect.ValueOf(val) // lay duoc con tro
+		v = reflect.Indirect(v)   // lay gia tri struct tu con tro
+		fmt.Println("======: ", v.Kind())
+		if v.Kind() != reflect.Struct {
+			return nil, errors.New("not struct")
+		}
+		for i := 0; i < v.NumField(); i++ {
+			// Get the field by index
+			field := v.Field(i)
+			// Get the field name
+			fieldName := v.Type().Field(i).Name
+			// Print the field name and value
+			fmt.Printf("Field %d: %s = %v\n", i, fieldName, field.Interface())
+			argsVal = append(argsVal, field.Interface())
+		}
+		qb = qb.Values(argsVal...)
+	}
+	query, args, err := qb.ToSql()
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := connectDB.Exec(query, args...)
+	if err != nil {
+		log.Fatal(err)
+		return nil, err
+	}
+	lastInsertId, _ := response.LastInsertId()
+	rowEffect, _ := response.RowsAffected()
+	return &ResponeInsert{
+		LastInsertId: int(lastInsertId),
+		RowEffect:    int(rowEffect),
+	}, nil
 }
 
 type ResponeInsert struct {
