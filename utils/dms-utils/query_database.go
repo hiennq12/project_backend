@@ -159,16 +159,30 @@ func parseColumns(i interface{}) []string {
 	t := reflect.TypeOf(i).Elem()
 	for index := 0; index < t.NumField(); index++ {
 		f := t.Field(index)
-		name := f.Name
-		typeV := f.Type
-		kind := f.Type.Kind()
-		//jsonKey := getKeyFromJSONTag(f.Tag.Get("json"))
-		//if jsonKey == "-" || utils.IsIgnoreThisField(name) {
-		//	continue
-		//}
-		//st.addColumnFieldNameAndKind(jsonKey, name, kind, typeV)
-
-		fmt.Println("+++++++++Test data: ", name, typeV, kind)
+		colName := getKeyFromJSONTag(f.Tag.Get("json"))
+		if colName == "-" {
+			continue
+		}
+		columns = append(columns, colName)
 	}
 	return columns
+}
+
+// getKeyFromJSONTag -- get json key from struct json tag
+func getKeyFromJSONTag(tag string) string {
+	pieces := StringToSlice(tag, ",")
+	return pieces[0]
+}
+
+// StringToSlice -- slice string by seperate
+func StringToSlice(s, sep string) []string {
+	var sl []string
+
+	for _, p := range strings.Split(s, sep) {
+		if str := strings.TrimSpace(p); len(str) > 0 {
+			sl = append(sl, str)
+		}
+	}
+
+	return sl
 }

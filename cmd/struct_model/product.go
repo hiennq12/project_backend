@@ -3,9 +3,9 @@ package struct_model
 import "time"
 
 type Product struct {
-	ProductID     int       `json:"product_id"`
-	UserID        int       `json:"user_id"`
-	CategoryID    int       `json:"category_id"`
+	Id            int       `json:"id"`
+	UserId        int       `json:"user_id"`
+	CategoryId    int       `json:"category_id"`
 	ProductName   string    `json:"product_name"`
 	Description   string    `json:"description"`
 	Price         float64   `json:"price"`
@@ -28,9 +28,9 @@ type ProductsRequest struct {
 	ProductIds []int64 `json:"product_ids"`
 }
 
-type InsertProoductsRequest struct {
-	UserID        int       `json:"user_id,omitempty"`
-	CategoryID    int       `json:"category_id,omitempty"`
+type InsertProductsRequest struct {
+	UserId        int       `json:"user_id,omitempty"`
+	CategoryId    int       `json:"category_id,omitempty"`
 	ProductName   string    `json:"product_name,omitempty"`
 	Description   string    `json:"description,omitempty"`
 	Price         float64   `json:"price,omitempty"`
