@@ -82,7 +82,6 @@ func InsertProducts(ctx context.Context, req []*struct_model.InsertProductsReque
 
 		v := reflect.ValueOf(val) // lay duoc con tro
 		v = reflect.Indirect(v)   // lay gia tri struct tu con tro
-		fmt.Println("======: ", v.Kind())
 		if v.Kind() != reflect.Struct {
 			return nil, errors.New("not struct")
 		}
@@ -130,14 +129,24 @@ func GetProducts(ctx context.Context, req *struct_model.ProductsRequest) ([]stru
 		return nil, err
 	}
 
-	query, args, err := squirrel.Select("*").From("products").
-		Where(squirrel.Eq{"id": req.ProductId}).
-		PlaceholderFormat(squirrel.Dollar).ToSql()
+	limit := uint64(10)
+	if req.Limit > 0 {
+		limit = req.Limit
+	}
+
+	qb := squirrel.Select("*").From("products").Limit(limit).
+		PlaceholderFormat(squirrel.Dollar)
+
+	if req.ProductId > 0 {
+		qb = qb.Where(squirrel.Eq{"id": req.ProductId})
+	}
+
+	query, args, err := qb.ToSql()
 	if err != nil {
 		return nil, err
 	}
 
-	rows, err := connectDB.Query(query, args...)
+	rows, err := connectDB.QueryContext(ctx, query, args...)
 	if err != nil {
 		return nil, err
 	}
