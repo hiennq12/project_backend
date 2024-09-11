@@ -26,6 +26,7 @@ type Product struct {
 type ProductsRequest struct {
 	ProductId  int64   `json:"product_id"`
 	ProductIds []int64 `json:"product_ids"`
+	Limit      uint64  `json:"limit"`
 }
 
 type InsertProductsRequest struct {

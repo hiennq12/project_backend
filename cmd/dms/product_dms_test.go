@@ -10,12 +10,14 @@ import (
 )
 
 func TestGetProducts(t *testing.T) {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
 	req := &struct_model.ProductsRequest{
-		ProductId: 5,
+		//ProductId: 5,
 		//ProductIds: nil,
 	}
 
-	response, err := GetProducts(context.Background(), req)
+	response, err := GetProducts(ctx, req)
 	if err != nil {
 		log.Fatal("error: ", err.Error())
 	}
@@ -28,15 +30,33 @@ func TestInsertProducts(t *testing.T) {
 	req = append(req, &struct_model.InsertProductsRequest{
 		UserId:        1,
 		CategoryId:    1,
-		ProductName:   "Nguoi ru ngu",
-		Description:   "tam bo qua",
-		Price:         100000,
-		Condition:     "con moi",
+		ProductName:   "Nguoi ru ngu1",
+		Description:   "tam bo qua1",
+		Price:         200000,
+		Condition:     "con moi1",
 		Location:      "Ha Noi, Viet Nam",
 		StockQuantity: 1,
 		Weight:        0.3,
 		Dimensions:    "13x20cm",
-		SKU:           "DonatoCarrisi_NguoiRuNgu",
+		SKU:           "DonatoCarrisi_NguoiRuNgu1",
+		Brand:         "Sach tieng viet",
+		Warranty:      "Khong co",
+		IsNegotiable:  true,
+		CreatedAt:     time.Now(),
+		UpdatedAt:     time.Now(),
+		IsActive:      true,
+	}, &struct_model.InsertProductsRequest{
+		UserId:        1,
+		CategoryId:    1,
+		ProductName:   "Nguoi ru ngu2",
+		Description:   "tam bo qua2",
+		Price:         200000,
+		Condition:     "con moi1",
+		Location:      "Ha Noi, Viet Nam",
+		StockQuantity: 1,
+		Weight:        0.3,
+		Dimensions:    "13x20cm",
+		SKU:           "DonatoCarrisi_NguoiRuNgu2",
 		Brand:         "Sach tieng viet",
 		Warranty:      "Khong co",
 		IsNegotiable:  true,

@@ -12,7 +12,8 @@ import (
 var connectDB *sql.DB
 
 func ConnectDbPostgreSQL() (*sql.DB, error) {
-	dataConfig, err := config.ReadConfigDb("../../config/connect_database.yaml")
+	//dataConfig, err := config.ReadConfigDb("../../config/connect_database.yaml")
+	dataConfig, err := config.ReadConfigDb("config/connect_database.yaml")
 	if err != nil {
 		log.Fatal(fmt.Sprintf("Error when read file config database. Detail: [%v]", err.Error()))
 		return nil, err
@@ -36,9 +37,4 @@ func ConnectDbPostgreSQL() (*sql.DB, error) {
 	log.Printf("Connect database succcess!!")
 	connectDB = connectPostgreSQL
 	return connectPostgreSQL, nil
-	//err = connectPostgreSQL.Ping()
-	//if err != nil {
-	//	log.Fatalf(fmt.Sprintf("Test ping db error. Detail: [%v]", err.Error()))
-	//}
-
 }
