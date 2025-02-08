@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"fmt"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/hiennq12/project_backend/cmd/dms"
 	"github.com/hiennq12/project_backend/cmd/struct_model"
@@ -14,6 +15,7 @@ func GetProducts(ctx *fiber.Ctx) error {
 		log.LogErrorWithLine(err)
 		return fiber.NewError(fiber.StatusBadRequest, fmt.Sprintf("Error detail: %v", err.Error()))
 	}
+
 	products, err := dms.GetProducts(ctx.Context(), req)
 	if err != nil {
 		log.LogErrorWithLine(err)
