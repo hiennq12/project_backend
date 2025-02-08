@@ -5,22 +5,13 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"github.com/Masterminds/squirrel"
-	"github.com/hiennq12/project_backend/cmd/struct_model"
-	"github.com/hiennq12/project_backend/utils/dms-utils"
 	"log"
 	"reflect"
+
+	"github.com/Masterminds/squirrel"
+	"github.com/hiennq12/project_backend/cmd/struct_model"
+	dms_utils "github.com/hiennq12/project_backend/utils/dms-utils"
 )
-
-type TestRequest struct {
-	Id   int64
-	Name string
-}
-
-type TestResponse struct {
-	LastInsertId int64
-	RowEffect    int64
-}
 
 func InsertDataToTestTable(req *TestRequest) (*TestResponse, error) {
 	connect, err := ConnectDbPostgreSQL()
@@ -114,13 +105,13 @@ func InsertProducts(ctx context.Context, req []*struct_model.InsertProductsReque
 	}, nil
 }
 
-type ResponeInsert struct {
-	LastInsertId int
-	RowEffect    int
-}
+// type ResponeInsert struct {
+// 	LastInsertId int
+// 	RowEffect    int
+// }
 
-type ProductsResponse struct {
-}
+// type ProductsResponse struct {
+// }
 
 func GetProducts(ctx context.Context, req *struct_model.ProductsRequest) ([]struct_model.Product, error) {
 	_, err := ConnectDbPostgreSQL()
